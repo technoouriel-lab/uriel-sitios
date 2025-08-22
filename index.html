@@ -141,9 +141,8 @@ footer {
   <div class="description">"El éxito es la suma de pequeños esfuerzos."</div>
 </div>
 
-<audio id="bgMusic" loop autoplay>
-  <source src="Drip_Intro.mp3" type="audio/mpeg">
-  Tu navegador no soporta audio.
+<audio id="bgMusic" loop>
+  <source src="Drip_intro.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -169,12 +168,14 @@ function draw(){
 draw();
 window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
 
-// Música Spotify / autoplay
+// Música Spotify con autoplay al primer clic
 const music=document.getElementById('bgMusic'),btn=document.getElementById('playBtn');
-window.addEventListener('load',()=>{
-  music.play().catch(()=>{ /* Si el navegador bloquea autoplay */ });
-});
-btn.addEventListener('click',()=>{music.play();btn.style.display='none';});
+function playMusic(){
+    music.play().catch(()=>{}); // evita errores si autoplay bloqueado
+    btn.style.display='none';
+}
+btn.addEventListener('click',playMusic);
+window.addEventListener('click',playMusic, {once:true});
 
 // Scroll animado
 const scrollSections=document.querySelectorAll('.scroll-section');
@@ -210,6 +211,5 @@ document.querySelectorAll('.btn-effect').forEach(btn=>{
   });
 });
 </script>
-
 </body>
-</html>
+</html> 
