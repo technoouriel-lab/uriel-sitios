@@ -84,9 +84,19 @@ h1::before {
   background-size:cover;
   transition:0.3s;
   cursor:pointer;
+  position:relative;
 }
 .btn:hover {transform:scale(1.05);box-shadow:0 0 30px red,0 0 50px orange;}
-.btn-tutorial {border:3px solid #ff3300;}
+.btn::before, .btn::after {
+  content:"★";
+  margin:0 5px;
+  font-size:1.2em;
+}
+.btn-tutorial::before, .btn-tutorial::after {
+  content:"✦";
+  margin:0 5px;
+  font-size:1.2em;
+}
 footer {
   margin-top:50px;
   font-size:0.9em;
@@ -116,7 +126,6 @@ footer {
 </style>
 </head>
 <body>
-
 <canvas id="bg"></canvas>
 
 <div class="menu-container">
@@ -134,7 +143,7 @@ footer {
   <button id="playBtn"><img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg" alt="Spotify"></button>
 
   <a class="btn btn-effect" href="https://discord.gg/HaccuX4k" target="_blank">Discord</a>
-  <a class="btn btn-effect" href="https://immortal.st/dashboard" target="_blank">Generador</a>
+  <a class="btn btn-effect" href="https://immortal.st/dashboard" target="_blank" id="generadorBtn">Generador</a>
   <a class="btn btn-effect btn-tutorial" href="https://justpaste.it/plshelp" target="_blank">Tutorial</a>
 
   <footer>“El que tiene miedo a morir, que no nazca.”</footer>
@@ -142,7 +151,7 @@ footer {
 </div>
 
 <audio id="bgMusic" loop>
-  <source src="Drip_intro.mp3" type="audio/mpeg">
+  <source src="DripIntro.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -150,7 +159,9 @@ footer {
 const canvas=document.getElementById('bg'),ctx=canvas.getContext('2d');
 canvas.width=window.innerWidth;canvas.height=window.innerHeight;
 const particles=[],colors=['#ff0000','#ff8000','#ffff00','#ff0080','#00ffff'];
-for(let i=0;i<150;i++){particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*4+1,dx:(Math.random()-0.5)*3,dy:(Math.random()-0.5)*3,color:colors[Math.floor(Math.random()*colors.length)]});}
+for(let i=0;i<150;i++){
+  particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*4+1,dx:(Math.random()-0.5)*3,dy:(Math.random()-0.5)*3,color:colors[Math.floor(Math.random()*colors.length)]});
+}
 function draw(){
   ctx.fillStyle='rgba(0,0,0,0.2)';
   ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -168,14 +179,9 @@ function draw(){
 draw();
 window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
 
-// Música Spotify con autoplay al primer clic
+// Música autoplay al click en la página
 const music=document.getElementById('bgMusic'),btn=document.getElementById('playBtn');
-function playMusic(){
-    music.play().catch(()=>{}); // evita errores si autoplay bloqueado
-    btn.style.display='none';
-}
-btn.addEventListener('click',playMusic);
-window.addEventListener('click',playMusic, {once:true});
+document.addEventListener('click',()=>{music.play(); btn.style.display='none';}, {once:true});
 
 // Scroll animado
 const scrollSections=document.querySelectorAll('.scroll-section');
@@ -194,22 +200,11 @@ scrollAnim();
 const menuBtn=document.getElementById('menuBtn'),menuLinks=document.getElementById('menuLinks');
 menuBtn.addEventListener('click',()=>{menuLinks.classList.toggle('show');});
 
-// Partículas al pasar el cursor sobre botones
-document.querySelectorAll('.btn-effect').forEach(btn=>{
-  btn.addEventListener('mousemove',e=>{
-    for(let i=0;i<5;i++){
-      const particle=document.createElement('div');
-      particle.classList.add('particle');
-      const x=(Math.random()-0.5)*50+'px',y=(Math.random()-0.5)*50+'px';
-      particle.style.setProperty('--x',x);
-      particle.style.setProperty('--y',y);
-      particle.style.left=e.clientX+'px';
-      particle.style.top=e.clientY+'px';
-      document.body.appendChild(particle);
-      setTimeout(()=>particle.remove(),800);
-    }
-  });
+// Efecto de sonido al dar click en Generador
+document.getElementById('generadorBtn').addEventListener('click',()=>{
+  const s=new Audio('https://freesound.org/data/previews/341/341695_6264460-lq.mp3');
+  s.play();
 });
 </script>
 </body>
-</html> 
+</html>
