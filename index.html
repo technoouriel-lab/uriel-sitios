@@ -67,8 +67,7 @@ h1::before {
   display:block;
   object-fit:cover;
 }
-#playBtn {background:transparent;border:none;cursor:pointer;margin-bottom:20px;}
-#playBtn img {width:130px;height:130px;}
+#playBtn {display:none;}
 .btn {
   display:block;
   margin:15px auto;
@@ -86,17 +85,12 @@ h1::before {
   cursor:pointer;
   position:relative;
 }
-.btn:hover {transform:scale(1.05);box-shadow:0 0 30px red,0 0 50px orange;}
 .btn::before, .btn::after {
-  content:"★";
-  margin:0 5px;
-  font-size:1.2em;
+  content:"꧁"; position:absolute; left:-20px; font-size:1.2em;
 }
-.btn-tutorial::before, .btn-tutorial::after {
-  content:"✦";
-  margin:0 5px;
-  font-size:1.2em;
-}
+.btn::after { content:"꧂"; right:-20px; left:auto; }
+.btn:hover {transform:scale(1.05);box-shadow:0 0 30px red,0 0 50px orange;}
+.btn-tutorial {border:3px solid #ff3300;}
 footer {
   margin-top:50px;
   font-size:0.9em;
@@ -123,9 +117,13 @@ footer {
 .menu-links {display:none;flex-direction:column;background:rgba(0,0,0,0.8);padding:10px;margin-top:5px;border:2px solid red;border-radius:8px;}
 .menu-links a {color:white;text-decoration:none;padding:5px 0;}
 .menu-links.show {display:flex;}
+.exit-bar {
+  position:fixed;bottom:0;left:0;width:100%;height:6px;background:linear-gradient(to right,#000000,#8B4513);cursor:pointer;z-index:1000;
+}
 </style>
 </head>
 <body>
+
 <canvas id="bg"></canvas>
 
 <div class="menu-container">
@@ -140,10 +138,9 @@ footer {
 <div class="container scroll-section">
   <h1 data-text="𝖘𝖎𝖙𝖎𝖔𝖘 𝖚𝖗𝖎𝖊𝖑">𝖘𝖎𝖙𝖎𝖔𝖘 𝖚𝖗𝖎𝖊𝖑</h1>
   <img class="pfp" src="https://i.pinimg.com/736x/0b/7f/2b/0b7f2b25c4e55b58dbe7101f6d91486b.jpg" alt="Natanael Cano">
-  <button id="playBtn"><img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg" alt="Spotify"></button>
-
+  
   <a class="btn btn-effect" href="https://discord.gg/HaccuX4k" target="_blank">Discord</a>
-  <a class="btn btn-effect" href="https://immortal.st/dashboard" target="_blank" id="generadorBtn">Generador</a>
+  <a class="btn btn-effect" href="https://immortal.st/dashboard" target="_blank" id="genBtn">Generador</a>
   <a class="btn btn-effect btn-tutorial" href="https://justpaste.it/plshelp" target="_blank">Tutorial</a>
 
   <footer>“El que tiene miedo a morir, que no nazca.”</footer>
@@ -153,15 +150,18 @@ footer {
 <audio id="bgMusic" loop>
   <source src="DripIntro.mp3" type="audio/mpeg">
 </audio>
+<audio id="spaceSound">
+  <source src="spaceclick.mp3" type="audio/mpeg">
+</audio>
+
+<div class="exit-bar" onclick="window.close()"></div>
 
 <script>
 // Fondo de partículas
 const canvas=document.getElementById('bg'),ctx=canvas.getContext('2d');
 canvas.width=window.innerWidth;canvas.height=window.innerHeight;
 const particles=[],colors=['#ff0000','#ff8000','#ffff00','#ff0080','#00ffff'];
-for(let i=0;i<150;i++){
-  particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*4+1,dx:(Math.random()-0.5)*3,dy:(Math.random()-0.5)*3,color:colors[Math.floor(Math.random()*colors.length)]});
-}
+for(let i=0;i<150;i++){particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*4+1,dx:(Math.random()-0.5)*3,dy:(Math.random()-0.5)*3,color:colors[Math.floor(Math.random()*colors.length)]});}
 function draw(){
   ctx.fillStyle='rgba(0,0,0,0.2)';
   ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -179,10 +179,6 @@ function draw(){
 draw();
 window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
 
-// Música autoplay al click en la página
-const music=document.getElementById('bgMusic'),btn=document.getElementById('playBtn');
-document.addEventListener('click',()=>{music.play(); btn.style.display='none';}, {once:true});
-
 // Scroll animado
 const scrollSections=document.querySelectorAll('.scroll-section');
 function scrollAnim(){
@@ -193,18 +189,21 @@ function scrollAnim(){
     else section.classList.remove('show');
   });
 }
-window.addEventListener('scroll',scrollAnim);
-scrollAnim();
+window.addEventListener('scroll',scrollAnim);scrollAnim();
 
 // Menú hamburguesa
 const menuBtn=document.getElementById('menuBtn'),menuLinks=document.getElementById('menuLinks');
 menuBtn.addEventListener('click',()=>{menuLinks.classList.toggle('show');});
 
-// Efecto de sonido al dar click en Generador
-document.getElementById('generadorBtn').addEventListener('click',()=>{
-  const s=new Audio('https://freesound.org/data/previews/341/341695_6264460-lq.mp3');
-  s.play();
-});
+// Música al primer click
+const music=document.getElementById('bgMusic');
+document.addEventListener('click', ()=>{ music.play().catch(()=>{}); }, {once:true});
+
+// Sonido espacial al presionar Generador
+const genBtn=document.getElementById('genBtn');
+const spaceSound=document.getElementById('spaceSound');
+genBtn.addEventListener('click', ()=>{ spaceSound.play(); });
 </script>
+
 </body>
-</html>
+</html> 
