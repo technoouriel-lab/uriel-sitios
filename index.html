@@ -14,7 +14,12 @@ body {
   background:black;
   color:white;
   overflow-x:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
   text-align:center;
+  flex-direction:column;
 }
 canvas {position:fixed;top:0;left:0;z-index:-2;}
 .container {
@@ -22,9 +27,6 @@ canvas {position:fixed;top:0;left:0;z-index:-2;}
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  min-height:100vh;
-  padding:20px;
-  position:relative;
   z-index:2;
 }
 h1 {
@@ -64,11 +66,18 @@ h1::before {
   border:4px solid red;
   box-shadow:0 0 25px red;
   margin:20px auto;
-  display:block;
   object-fit:cover;
 }
-#playBtn {background:transparent;border:none;cursor:pointer;margin-bottom:20px;}
-#playBtn img {width:130px;height:130px;}
+#playBtn {
+  background:transparent;
+  border:none;
+  cursor:pointer;
+  margin-bottom:20px;
+}
+#playBtn img {
+  width:150px;
+  height:150px;
+}
 
 /* Botones negros con borde rojo y letras blancas neón */
 .btn {
@@ -126,12 +135,8 @@ footer {
   margin-top:20px;
 }
 @keyframes fadeInOut {0%,100%{opacity:0;}50%{opacity:1;}}
-.scroll-section {
-  opacity:0;
-  transform: translateY(50px);
-  transition: all 0.8s ease-out;
-}
-.scroll-section.show {opacity:1;transform: translateY(0);}
+
+/* Menú hamburguesa */
 .menu-container {position:fixed;top:15px;left:15px;z-index:100;}
 .menu-btn {font-size:2em;background:none;color:white;border:none;cursor:pointer;}
 .menu-links {display:none;flex-direction:column;background:rgba(0,0,0,0.8);padding:10px;margin-top:5px;border:2px solid red;border-radius:8px;}
@@ -149,27 +154,6 @@ background: linear-gradient(to right, black, #654321);
 cursor:pointer;
 z-index:100;
 }
-
-/* Reloj digital estilo neón blanco con efecto derretido */
-#digitalClock {
-  position:fixed;
-  top:10px;
-  right:10px;
-  font-family:'Press Start 2P',cursive;
-  font-size:1em;
-  color:#fff;
-  text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #fff;
-  z-index:100;
-  pointer-events:none;
-  animation:melty 2s infinite alternate;
-}
-@keyframes melty {
-  0% {transform: skewX(0deg) skewY(0deg);}
-  25% {transform: skewX(2deg) skewY(1deg);}
-  50% {transform: skewX(-2deg) skewY(-1deg);}
-  75% {transform: skewX(1deg) skewY(2deg);}
-  100% {transform: skewX(-1deg) skewY(-2deg);}
-}
 </style>
 </head>
 <body>
@@ -184,9 +168,11 @@ z-index:100;
   </div>  
 </div>
 
-<div class="container scroll-section">  
+<div class="container">  
   <h1 data-text="𝖘𝖎𝖙𝖎𝖔𝖘 𝖚𝖗𝖎𝖊𝖑">𝖘𝖎𝖙𝖎𝖔𝖘 𝖚𝖗𝖎𝖊𝖑</h1>  
   <img class="pfp" src="https://i.pinimg.com/736x/0b/7f/2b/0b7f2b25c4e55b58dbe7101f6d91486b.jpg" alt="Natanael Cano">  
+
+  <!-- Botón de Spotify -->
   <button id="playBtn"><img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg" alt="Spotify"></button>
 
   <a class="btn btn-effect" href="https://discord.gg/HaccuX4k" target="_blank">Discord</a>
@@ -196,9 +182,6 @@ z-index:100;
   <footer>“El que tiene miedo a morir, que no nazca.”</footer>  
   <div class="description">"El éxito es la suma de pequeños esfuerzos."</div>  
 </div>
-
-<!-- Reloj digital -->
-<div id="digitalClock"></div>
 
 <!-- Barra de salida -->
 <div class="exit-bar" onclick="window.close()"></div>
@@ -214,8 +197,8 @@ z-index:100;
 // Fondo de partículas
 const canvas=document.getElementById('bg'),ctx=canvas.getContext('2d');  
 canvas.width=window.innerWidth;canvas.height=window.innerHeight;  
-const particles=[],colors=['#ff0000','#ff8000','#ffff00','#ff0080','#00ffff'];  
-for(let i=0;i<150;i++){  
+const particles=[],colors=['#ff0000','#ff8000','#ffff00','#ff0080','#00ffff','#00ff00','#ffffff','#ff5500'];  
+for(let i=0;i<200;i++){  
   particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*4+1,dx:(Math.random()-0.5)*3,dy:(Math.random()-0.5)*3,color:colors[Math.floor(Math.random()*colors.length)]});  
 }  
 function draw(){  
@@ -244,38 +227,9 @@ const genBtn=document.getElementById('generadorBtn');
 const spaceSound=document.getElementById('spaceSound');  
 genBtn.addEventListener('click',()=>{spaceSound.play();});  
 
-// Scroll animado
-const scrollSections=document.querySelectorAll('.scroll-section');  
-function scrollAnim(){  
-  const triggerBottom=window.innerHeight*0.85;  
-  scrollSections.forEach(section=>{  
-    const sectionTop=section.getBoundingClientRect().top;  
-    if(sectionTop<triggerBottom) section.classList.add('show');  
-    else section.classList.remove('show');  
-  });  
-}  
-window.addEventListener('scroll',scrollAnim);  
-scrollAnim();  
-
 // Menú hamburguesa
 const menuBtn=document.getElementById('menuBtn'),menuLinks=document.getElementById('menuLinks');  
 menuBtn.addEventListener('click',()=>{menuLinks.classList.toggle('show');});  
-
-// Reloj digital
-function updateClock() {
-  const clock = document.getElementById('digitalClock');
-  const now = new Date();
-  let hours = now.getHours();
-  const minutes = now.getMinutes();
-  const seconds = now.getSeconds();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12;
-  hours = hours ? hours : 12; // hora 0 -> 12
-  const formattedTime = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')} ${ampm}`;
-  clock.textContent = formattedTime;
-}
-setInterval(updateClock, 1000);
-updateClock();
 </script>
 </body>
-  </html>
+</html>
