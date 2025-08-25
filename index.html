@@ -116,7 +116,7 @@ footer {margin-top:50px;font-size:0.9em;color:#ff9900;text-shadow:0 0 10px #ff55
 <div class="exit-bar" onclick="window.close()"></div>
 
 <audio id="bgMusic" loop>  
-  <source src="Drip_intro.mp3" type="audio/mpeg">  
+  <source src="que_me_van_a_contar.mp3" type="audio/mpeg">  
 </audio>  
 <audio id="spaceSound">  
   <source src="space_click.mp3" type="audio/mpeg">  
@@ -124,50 +124,95 @@ footer {margin-top:50px;font-size:0.9em;color:#ff9900;text-shadow:0 0 10px #ff55
 
 <script>
 // Fondo de partículas
-const canvas = document.getElementById('bg'), ctx = canvas.getContext('2d');
+const canvas = document.getElementById('bg'),
+      ctx = canvas.getContext('2d');
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-const particles = [], colors = ['#ff0000','#ff8000','#ffff00','#ff0080','#00ffff','#00ff00','#ffffff','#ff5500'];
-for(let i=0;i<200;i++){  
-  particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*4+1, dx:(Math.random()-0.5)*3, dy:(Math.random()-0.5)*3, color:colors[Math.floor(Math.random()*colors.length)]});  
-}
-function draw(){  
-  ctx.fillStyle='rgba(0,0,0,0.2)';  
-  ctx.fillRect(0,0,canvas.width,canvas.height);  
-  for(let p of particles){  
-    ctx.beginPath();  
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);  
-    ctx.fillStyle=p.color;  
-    ctx.fill();  
-    p.x+=p.dx; p.y+=p.dy;  
-    if(p.x<0||p.x>canvas.width) p.dx*=-1;  
-    if(p.y<0||p.y>canvas.height) p.dy*=-1;  
-  }  
-  requestAnimationFrame(draw);  
-}
-draw();  
-window.addEventListener('resize',()=>{canvas.width=window.innerWidth; canvas.height=window.innerHeight;});
 
-// Música Spotify
-const music=document.getElementById('bgMusic'), btn=document.getElementById('playBtn');  
-btn.addEventListener('click',()=>{music.play(); btn.style.display='none';});  
+const particles = [];
+const colors = ['#ff0000','#ff8000','#ffff00','#ff0080','#00ffff','#00ff00','#ffffff','#ff5500'];
+
+for(let i = 0; i < 200; i++){
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 4 + 1,
+    dx: (Math.random() - 0.5) * 3,
+    dy: (Math.random() - 0.5) * 3,
+    color: colors[Math.floor(Math.random() * colors.length)]
+  });
+}
+
+function draw(){
+  ctx.fillStyle = 'rgba(0,0,0,0.2)';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  for(let p of particles){
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.fill();
+    p.x += p.dx;
+    p.y += p.dy;
+
+    if(p.x < 0 || p.x > canvas.width) p.dx *= -1;
+    if(p.y < 0 || p.y > canvas.height) p.dy *= -1;
+  }
+
+  requestAnimationFrame(draw);
+}
+draw();
+
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
+// Música
+const music = document.getElementById('bgMusic'),
+      btn = document.getElementById('playBtn');
+
+btn.addEventListener('click', () => {
+  music.play();
+  btn.style.display = 'none';
+});
 
 // Sonido generador
-const genBtn=document.getElementById('generadorBtn');  
-const spaceSound=document.getElementById('spaceSound');  
-genBtn.addEventListener('click',()=>{spaceSound.play();});  
+const genBtn = document.getElementById('generadorBtn'),
+      spaceSound = document.getElementById('spaceSound');
+
+genBtn.addEventListener('click', () => {
+  spaceSound.play();
+});
 
 // Menú hamburguesa
-const menuBtn=document.getElementById('menuBtn'), menuLinks=document.getElementById('menuLinks');  
-menuBtn.addEventListener('click',()=>{menuLinks.classList.toggle('show');});  
+const menuBtn = document.getElementById('menuBtn'),
+      menuLinks = document.getElementById('menuLinks');
 
-// Frases rotando
-const frases = ["Con la cadena pesada y la troca levantada.","Entre más bélico, más respeto.","La vida es corta, pero el corrido es eterno.","Con botella en mano y cadena en el pecho.","No ocupo suerte, yo cargo valor.","Ajuaaaa, bélico hasta los huesos."];
+menuBtn.addEventListener('click', () => {
+  menuLinks.classList.toggle('show');
+});
+
+// Frases rotativas
+const frases = [
+  "Con la cadena pesada y la troca levantada.",
+  "Entre más bélico, más respeto.",
+  "La vida es corta, pero el corrido es eterno.",
+  "Con botella en mano y cadena en el pecho.",
+  "No ocupo suerte, yo cargo valor.",
+  "Ajuaaaa, bélico hasta los huesos."
+];
+
 let index = 0;
 const desc = document.querySelector(".description");
-function cambiarFrase() { desc.textContent = frases[index]; index = (index + 1) % frases.length; }
+
+function cambiarFrase() {
+  desc.textContent = frases[index];
+  index = (index + 1) % frases.length;
+}
 cambiarFrase();
-setInterval(cambiarFrase,5000);
+setInterval(cambiarFrase, 5000);
 </script>
 </body>
 </html>
